@@ -121,18 +121,19 @@ export class EasyMotion {
   /**
    * Create and cache the SVG data URI for different marker codes and colors
    */
-  private static getSvgDataUri(code: string, backgroundColor: string, fontColor: string): vscode.Uri {
+  private static getSvgDataUri(code: string): vscode.Uri {
       var cache = this.svgCache[code];
       if (cache) {
         return cache;
       }
 
-      const width = code.length * 8 + 1;
-      var uri = vscode.Uri.parse(
-        `data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ` +
-        `13" height="14" width="${width}"><rect width="${width}" height="14" rx="2" ry="2" ` +
-        `style="fill: ${backgroundColor};"></rect><text font-family="Consolas" font-size="14px" ` +
-        `fill="${fontColor}" x="1" y="10">${code}</text></svg>`);
+      const width = code.length * 10 + 1;
+      const height = 12;
+      var svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ` +
+        `${height}" height="${height}" width="${width}"><rect width="${width}" height="${height}" ` +
+        `fill="#FFE980"></rect><text font-family="SF Mono" font-size="13px" font-weight="600" ` +
+        `fill="black" x="1" y="10">${code}</text></svg>`;
+      var uri = vscode.Uri.parse(`data:image/svg+xml;utf8,${svg}`);
 
       this.svgCache[code] = uri;
 
@@ -289,8 +290,6 @@ export class EasyMotion {
       // Get keys after the depth we're at
       var keystroke = marker.name.substr(this.accumulation.length);
 
-      let fontColor = keystroke.length > 1 ? "orange" : "red";
-
       if (!this.decorations[keystroke.length]) {
         this.decorations[keystroke.length] = [];
       }
@@ -301,13 +300,13 @@ export class EasyMotion {
         range: new vscode.Range(pos.line, charPos, pos.line, charPos),
         renderOptions: {
           dark: {
-            after: {
-              contentIconPath: EasyMotion.getSvgDataUri(keystroke, "black", fontColor)
+            before: {
+              contentIconPath: EasyMotion.getSvgDataUri(keystroke)
             }
           },
           light: {
-            after: {
-              contentIconPath: EasyMotion.getSvgDataUri(keystroke, "black", "white")
+            before: {
+              contentIconPath: EasyMotion.getSvgDataUri(keystroke)
             }
           }
         }
