@@ -323,7 +323,7 @@
         "gulp-typings": "^2.0.0",
         "merge-stream": "^1.0.0",
         "tslint": "^3.10.2",
-        "typescript": "2.0.0",
+        "typescript": "2.0.9",
         "typings": "^1.4.0"
     }
 }
